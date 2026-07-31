@@ -37,7 +37,8 @@ const CMT = (() => {
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpa2p5b21lYWd1bnR5bmhscXdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNTUzMTgsImV4cCI6MjA5MTYzMTMxOH0.Ly0fe9szBilaDt0uPYOT1EiFqfI7V7iStJAXCP8h7v8';
 
   // Projects owned by this session_token are visible to ALL users as demo content.
-  // Seeded via seed-swiss-demo-cases.sql. Editable — re-run the SQL to restore.
+  // Seeded via seed-swiss-demo-cases.sql (Units 01–05) and
+  // seed-unit06-coordinate.sql (Unit 06). Editable — re-run the SQL to restore.
   const DEMO_TOKEN = 'demo-swiss-policy-2026';
 
   // ── SESSION TOKEN ─────────────────────────────────────────

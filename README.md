@@ -32,6 +32,12 @@ This is a **demonstration platform** for IMD's CHM 2026 change management course
 - Module data (vision, stakeholders, etc.) is cached unencrypted in `localStorage` for offline reads
 - Two seeded Swiss policy demo cases are intentionally readable by all visitors (read-only via RLS)
 
+Unit 06 (Coordinate — Acting Without Agreement) is seeded separately via
+`seed-unit06-coordinate.sql`. This SQL upserts coordinate-module data for
+both demo projects (Einheitskasse and 36-Stunden-Woche), which are both
+strong values-based cases where coordination-without-agreement is the
+point of the exercise. Safe to re-run to reset the demo state.
+
 **Production deployment** would require migrating to authenticated identity (e.g. Supabase Auth, SSO, or the customer's existing identity provider). This is a deliberate scope choice — the course context does not require account management, and the backend infrastructure will be reshaped when the platform is integrated into a customer environment.
 
 For production-stable accessibility (full keyboard navigation, ARIA roles), see the open accessibility work in the issue tracker.
