@@ -85,7 +85,7 @@ const CMT = (() => {
     } catch(e) { return null; }
   }
   function cacheClear(projectId) {
-    ['vision','forces','stakeholders','communication','nudges'].forEach(m => {
+    ['vision','forces','stakeholders','communication','nudges','coordinate'].forEach(m => {
       localStorage.removeItem(`cmt_module_${projectId}_${m}`);
     });
   }
@@ -193,7 +193,7 @@ const CMT = (() => {
   //   2. localStorage cache (covers offline + the moment between save and sync)
   // The union keeps the sidebar progress dots accurate even when one source
   // is empty.
-  const KNOWN_MODULES = ['vision','forces','stakeholders','communication','nudges'];
+  const KNOWN_MODULES = ['vision','forces','stakeholders','communication','nudges','coordinate'];
 
   function _hasMeaningfulValue(obj) {
     if (!obj) return false;
