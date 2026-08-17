@@ -6,7 +6,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Change Management Platform</title>
   <meta property="og:title" content="Change Management Platform">
-  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges.">
+  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges · Coordinate.">
   <meta property="og:type" content="website">
   <script src="cmt-shell.js"></script>
   <link rel="stylesheet" href="cmt-system.css">
@@ -37,7 +37,7 @@
           <div>
             <div class="lobby-eyebrow">Context-aware AI for change practitioners</div>
             <h1 class="lobby-title">An AI-ready change workspace.</h1>
-            <p class="lobby-subtitle">Five connected units, one living case. Each unit generates framework-aware prompts you take to Claude, ChatGPT, or your institution's AI tool. The platform doesn't embed a chatbot — it shapes the conversation.</p>
+            <p class="lobby-subtitle">Five units for building the change case, plus a sixth diagnostic for situations where positions will not converge. Each unit generates framework-aware prompts you take to Claude, ChatGPT, or your institution's AI tool. The platform doesn't embed a chatbot — it shapes the conversation.</p>
           </div>
           <button class="btn btn-primary" onclick="document.getElementById('np-title').focus()">Create Project</button>
         </section>
@@ -109,8 +109,8 @@
           <section class="module span-12">
             <div class="module-header">
               <div>
-                <div class="eyebrow">The five units</div>
-                <h2 class="module-title">Reality → People → Meaning → Behaviour → Action</h2>
+                <div class="eyebrow">The six units</div>
+                <h2 class="module-title">Reality → People → Meaning → Behaviour → Action → Coordination</h2>
               </div>
             </div>
             <div class="module-map">
@@ -154,6 +154,14 @@
                 </span>
                 <span class="unit-output">nudges · adoption · actions</span>
               </a>
+              <a class="module-link" id="unit6-link" href="unit6-coordinate.html">
+                <span class="module-index">06</span>
+                <span>
+                  <span class="module-link-title">Coordinate without agreement</span>
+                  <span class="module-link-sub">Acting without agreement — coordinate what will not converge.</span>
+                </span>
+                <span class="unit-output">coordination · held differences</span>
+              </a>
             </div>
           </section>
         </div>
@@ -194,7 +202,16 @@
 
   let deleteTargetId = null;
 
+  function setWorkspaceLinkTargets() {
+    const currentProjectId = localStorage.getItem('cmt_current_project');
+    const unit6Link = document.getElementById('unit6-link');
+    if (unit6Link && currentProjectId) {
+      unit6Link.href = 'unit6-coordinate.html?project=' + encodeURIComponent(currentProjectId);
+    }
+  }
+
   async function init() {
+    setWorkspaceLinkTargets();
     // Connectivity indicator (optional — the element may have been removed
     // from the sidebar in a past refactor, so guard against null).
     try {

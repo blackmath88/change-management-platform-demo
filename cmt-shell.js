@@ -13,6 +13,7 @@
     { href: 'unit3-stakeholders.html',  num: '03', label: 'Stakeholders', module: 'stakeholders' },
     { href: 'unit4-communication.html', num: '04', label: 'Messaging',    module: 'communication' },
     { href: 'unit5-nudges.html',        num: '05', label: 'Nudges',       module: 'nudges' },
+    { href: 'unit6-coordinate.html',   num: '06', label: 'Coordinate',   module: 'coordinate' },
   ];
 
   function renderSidebar(activeHref) {
