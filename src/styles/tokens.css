@@ -1,0 +1,41 @@
+/*
+ * Casework renderer 0.1
+ * Consumes the intent of:
+ *   after-wada-doctrine 1.0.0
+ *   after-wada-type 1.0.0
+ *   seq-stone-ledger 1.0.0
+ *   pair-01-dusk-vermillion 1.0.0
+ *
+ * Values are mapped for interface contrast; relational roles remain primary.
+ */
+:root {
+  --ground: #f1ece1;
+  --ground-deep: #e5ddce;
+  --raised: #faf6ee;
+  --quiet: #cfc4b1;
+  --quiet-dark: #685f53;
+  --ink: #2e3438;
+  --ink-soft: #596166;
+  --mineral: #56707a;
+  --mineral-deep: #344f59;
+  --mineral-pale: #d8e0df;
+  --vermillion: #8e4936;
+  --vermillion-deep: #693225;
+  --vermillion-pale: #ead8cf;
+  --moss: #5f6b3d;
+  --paper-white: #fffdf8;
+
+  --line: color-mix(in srgb, var(--ink) 21%, transparent);
+  --line-light: color-mix(in srgb, var(--ink) 11%, transparent);
+  --focus: #365089;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --sans: Inter, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --rail: 17.5rem;
+  --gutter: clamp(1.25rem, 3.2vw, 3.75rem);
+  --rule: 1px solid var(--line);
+  --radius-control: 0.2rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

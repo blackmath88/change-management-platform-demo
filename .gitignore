@@ -6,6 +6,15 @@ my_profile.json
 # macOS
 .DS_Store
 
+# Application build
+node_modules/
+dist/
+coverage/
+.playwright-browsers/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
 # wrangler files
 .wrangler
 .dev.vars*

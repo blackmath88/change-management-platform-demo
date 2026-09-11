@@ -1,200 +1,128 @@
-# Change Management Platform — Design Refresh (v2)
+# Casework
 
-> A redesign of [blackmath88/change-management-platform](https://github.com/blackmath88/change-management-platform) — a five-unit interactive workbook that guides practitioners through a full change initiative.
+Casework is a local-first working environment for people moving complex change.
+It holds direction, pressure, influence, narrative, experiments, and differences
+inside one durable case record.
 
----
+This repository is being rebuilt from an earlier static prototype. The new
+application is independent in identity, language, information architecture, and
+visual system. The previous standalone HTML workspaces remain temporarily in the
+repository as migration references; they are not included in the production
+bundle.
 
-## What is this repo?
+The repository uses pnpm exclusively. The package manager version is declared in
+`package.json`; pnpm enforces that declaration through `.npmrc`.
 
-This repository holds the **design-refresh iteration** of the Change Management Platform. The original platform works well functionally but uses an early-stage visual system. This repo is where the updated design language, component library, and page templates are developed before being merged back.
+## Product principles
 
-The platform itself is a browser-based, Supabase-backed workbook that walks a change lead through:
+- The case is a composition, not a dashboard.
+- Evidence stays beside the judgment it affects.
+- Workspaces are available non-linearly.
+- Local work is immediate and durable.
+- Remote infrastructure remains replaceable.
+- AI support produces inspectable context briefs; it does not pretend to decide.
+- Quiet ground occupies most of every view.
+- Colour appears in relationships, never as decoration.
+- Every unusual visual technique must explain something.
 
-| Unit | Name | Core question |
-|------|------|---------------|
-| 01 | Shape your change vision | Why does this change need to happen? Where are we going? |
-| 02 | Understand the forces | What is pushing — and blocking — the change? |
-| 03 | Map your stakeholders | Who matters, how do they stand, what do they need? |
-| 04 | Communicate with impact | How do we move people? Know, feel, do? |
-| 05 | Nudge & build momentum | What interventions sustain adoption? |
+## Visual source
 
----
+The interface is a renderer of the `blackmath88/colors` style lexicon. The first
+renderer mapping consumes the intent of:
 
-## Scope and limitations
+- `after-wada-doctrine`
+- `after-wada-type`
+- `seq-stone-ledger`
+- `pair-01-dusk-vermillion`
+- `mat-matte-washi`
 
-This is a **demonstration platform** for IMD's CHM 2026 change management course. It is not intended for production use with sensitive organizational data.
+These records are derived *after* Sanzo Wada's relational colour principles; they
+are not reproductions of his dictionary plates. The application preserves the
+lexicon's rules—relationship, proportion, quiet ground, and one accent per
+component—rather than flattening it into a list of hex values.
 
-**Authentication model:** The platform uses a client-generated `session_token` stored in browser `localStorage` as the access boundary. Server-side Row-Level Security (RLS) policies enforce that requests can only read or modify rows matching the requesting browser's token. This protects against drive-by access through the public Supabase anon key, but is not a substitute for real authentication.
+## Architecture
 
-**What this means in practice:**
-- Project data is scoped per browser/profile, not per identified user
-- Anyone with access to the same browser session sees the same projects
-- Module data (vision, stakeholders, etc.) is cached unencrypted in `localStorage` for offline reads
-- Two seeded Swiss policy demo cases are intentionally readable by all visitors (read-only via RLS)
-
-Unit 06 (Coordinate — Acting Without Agreement) is seeded separately via
-`seed-unit06-coordinate.sql`. This SQL upserts coordinate-module data for
-both demo projects (Einheitskasse and 36-Stunden-Woche), which are both
-strong values-based cases where coordination-without-agreement is the
-point of the exercise. Safe to re-run to reset the demo state.
-
-**Production deployment** would require migrating to authenticated identity (e.g. Supabase Auth, SSO, or the customer's existing identity provider). This is a deliberate scope choice — the course context does not require account management, and the backend infrastructure will be reshaped when the platform is integrated into a customer environment.
-
-For production-stable accessibility (full keyboard navigation, ARIA roles), see the open accessibility work in the issue tracker.
-
----
-
-## Current design (v1 baseline)
-
-The original platform ships with:
-
-- **Type** — IBM Plex Sans + Plex Mono + Plex Serif (Google Fonts)
-- **Design language** — IBM Carbon-inspired: flat surfaces, hard 2 px radius, border-bottom underline inputs
-- **Topbar** — dark (`#121619`), CM logotype, save indicator
-- **Sidebar** — 248 px, shows all 5 units as peers, per-unit colour accents
-- **Colour system** — grey scale (`--g-00` → `--g-100`), one brand accent (`#0f62fe`), 5 unit accents, semantic ok/warn/danger
-- **Layout** — `display: flex` column body → topbar + app-layout → sidebar + unit-main
-- **Persistence** — Supabase (postgres) + localStorage write-through cache
-
-### Files
-
-| File | Role |
-|------|------|
-| `index.html` | Project dashboard (browse, create, import projects) |
-| `unit1-vision.html` | Unit 1 workspace |
-| `unit2-forces.html` | Unit 2 workspace |
-| `unit3-stakeholders.html` | Unit 3 workspace |
-| `unit4-communication.html` | Unit 4 workspace |
-| `unit5-nudges.html` | Unit 5 workspace |
-| `cmt-system.css` | Shared design tokens, topbar, sidebar, layout, components |
-| `cmt-client.js` | Supabase API wrapper + localStorage cache |
-| `cmt-shell.js` | Shared sidebar renderer (injected into `#sidebar-mount`) |
-
----
-
-## Design refresh goals (v2)
-
-The refresh targets the following improvements:
-
-### 1 · Visual identity
-- Cleaner, more contemporary feel — less "developer tool", more "practitioner workspace"
-- Refined type scale: clearer hierarchy between serif headlines, sans body, and mono labels
-- Slightly softer surfaces while keeping the editorial restraint
-
-### 2 · Colour system
-- Revisit the grey ramp for better perceptual linearity
-- Introduce a warmer neutral canvas to reduce eye strain on long sessions
-- Keep the 5 per-unit accent colours but refine their light tints for better WCAG contrast
-- Ensure all text/background pairings pass AA (4.5:1 for body, 3:1 for large text)
-
-### 3 · Component updates
-- **Topbar** — add breadcrumb export action; improve mobile collapse
-- **Sidebar** — show per-section completion state (dot → progress arc); collapsible on narrow viewports
-- **Cards** — project cards on the dashboard get a clearer meta layout
-- **Forms** — move from 1 px underline inputs to a bordered field with cleaner focus ring
-- **Buttons** — add a `btn-outline` variant; standardise icon spacing
-
-### 4 · Responsiveness
-- Dashboard collapses gracefully below 640 px
-- Unit workspace: sidebar becomes a bottom drawer on mobile
-- Tab bar scrolls horizontally with fade indicators
-
-### 5 · Accessibility
-- All interactive elements are keyboard-navigable with visible focus outlines
-- Modals trap focus; `role` and `aria-*` attributes added throughout
-- Toast messages use `role="status"` / `aria-live="polite"`
-
-### 6 · Dark mode (stretch)
-- CSS custom property overrides via `prefers-color-scheme: dark`
-- Keep the same design tokens; swap the ramp values
-
----
-
-## Design tokens (v2 direction)
-
-The token names remain backward-compatible. Only values change.
-
-```css
-:root {
-  /* Warm neutral canvas (replaces pure cool grey) */
-  --canvas:  #f8f7f5;
-  --surface: #ffffff;
-
-  /* Softer grey ramp */
-  --g-05: #f5f4f2;
-  --g-10: #ececea;
-  --g-20: #dddbd8;
-  --g-30: #bcb9b5;
-  --g-50: #888480;
-  --g-70: #4a4744;
-  --g-90: #252220;
-  --g-100: #131110;
-
-  /* Accent: slightly warmer blue */
-  --accent:    #0055fb;
-  --accent-hv: #003dc4;
-  --accent-lt: #eef3ff;
-
-  /* Typography */
-  --sans:  'Inter', system-ui, -apple-system, sans-serif;
-  --mono:  'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
-  --serif: 'Lora', 'IBM Plex Serif', Georgia, serif;
-
-  /* Radius — slightly more rounded for friendlier feel */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
-}
+```text
+React + TypeScript + Vite
+        │
+        ├── typed case domain (Zod)
+        ├── feature-oriented workspaces
+        ├── repository boundary
+        ├── IndexedDB (Dexie)
+        └── optional owner-scoped Supabase replica
 ```
 
-> **Note:** Font choices are directional and subject to change. Both Inter and Lora are available via Google Fonts with near-zero layout shift.
+IndexedDB remains the working source on every device. The optional remote adapter
+uses a durable local queue, optimistic revisions, and an explicit section-by-section
+conflict review; UI components do not address the backend directly.
 
----
-
-## Getting started
-
-The platform is entirely static HTML+CSS+JS — no build step required.
+## Development
 
 ```bash
-# 1. Clone this repo
-git clone https://github.com/blackmath88/change-management-platform-design2.git
-cd change-management-platform-design2
-
-# 2. Open index.html in your browser (or serve with any static server)
-npx serve .
-# → http://localhost:3000
+pnpm install
+pnpm dev
 ```
 
-> **Backend:** The Supabase project from the original repo is reused during development. No changes to `cmt-client.js` are needed unless the schema changes.
+Quality checks:
 
----
+```bash
+pnpm check
+pnpm test
+pnpm test:e2e:install # once per checkout
+pnpm test:e2e
+pnpm build
+```
 
-## Roadmap
+Production output is written to `dist/`. Cloudflare serves that directory with SPA
+fallback routing.
 
-- [x] README — scope and design direction documented
-- [ ] Design tokens — update `cmt-system.css` with v2 token values
-- [ ] Typography — swap fonts, refine scale
-- [ ] Component refresh — topbar, sidebar, cards, forms, buttons
-- [ ] Dashboard (`index.html`) — apply updated components
-- [ ] Unit pages (`unit1-unit5`) — apply updated components
-- [ ] Responsiveness — mobile sidebar drawer, tab bar behaviour
-- [ ] Accessibility audit — keyboard nav, ARIA, focus styles
-- [ ] Dark mode — `prefers-color-scheme` overrides (stretch)
-- [ ] Cross-browser check (Chrome, Firefox, Safari, Edge)
+The Playwright suite uses a project-local Chromium installation, exercises the
+case-to-brief workflow and keyboard dialog behavior, and runs automated WCAG A/AA
+checks against the portfolio and case plate. The same checks run in GitHub Actions.
 
----
+## Current rebuild status
 
-## Contributing
+Implemented:
 
-1. Work from the `copilot/refresh-repo-design` branch (this PR's branch) or open a new feature branch.
-2. Keep changes scoped — one component or one page per PR.
-3. Screenshot any visible UI changes and attach them to the PR description.
-4. Run the platform locally and navigate through all five units before marking a PR ready for review.
+- Durable multi-case domain model with schema validation
+- Local IndexedDB repository
+- Portfolio and new-case flow
+- Native case import/export with validated file envelopes
+- Conversion of previous project/module exports into the new case model
+- Duplicate, archive/restore, and deliberate-delete case lifecycle
+- Optional Supabase authentication and owner-scoped remote replica
+- Durable synchronization queue with optimistic revision conflict detection
+- Human-readable, workspace-level conflict resolution
+- Append-only decision and evidence history
+- Deterministic context briefs with Markdown, clipboard, and print output
+- Playwright workflow, keyboard, and automated WCAG A/AA coverage
+- Optional local material rendering: clear, paper, or fibre
+- Horizontally navigable mobile case rail with a persistent return to the index
+- Stable case routes
+- Asymmetric case overview
+- Direction, dynamics, influence, narrative, experiments, and differences
+- Debounced local recording with revision state
+- Responsive case navigation
+- Reduced-motion support
+- Wada-derived relational colour and material renderer
 
----
+Next:
 
-## Links
+- Revisit product naming and identity after real case use
 
-- **Original repo:** https://github.com/blackmath88/change-management-platform
-- **Live (original):** deployed via GitHub Pages on the original repo
-- **Design reference:** IBM Carbon Design System, Linear.app interface patterns
+## Data and privacy
+
+The rebuild is local-first. Without environment configuration, cases remain in the
+browser's IndexedDB and are never sent to a remote service.
+
+Authenticated synchronization is optional. To enable it:
+
+1. Create a Supabase project.
+2. Apply `supabase/migrations/20260911210000_casework_cases.sql`.
+3. Enable email OTP authentication and configure the permitted redirect URLs.
+4. Copy `.env.example` to `.env.local` and supply the project URL and anon key.
+
+The anon key is public by design. The migration denies anonymous table access and
+uses owner-scoped Row-Level Security for every operation. Never place a service-role
+key in this frontend.
