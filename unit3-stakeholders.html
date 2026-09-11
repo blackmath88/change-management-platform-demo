@@ -441,6 +441,7 @@
                     <div class="map-tooltip" id="map-tooltip"></div>
                   </div>
                 </div>
+                <div id="coordination-hint" class="hint-box" style="display:none; margin-top:16px;"></div>
                 <a class="ai-cue" href="#" data-ai-mode="champions"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Build a coalition</span><span class="ai-cue-arrow">→</span></a>
               </div>
 
@@ -587,6 +588,7 @@ async function init() {
   }
 
   renderInnerSidebar(); renderTable(); renderAiCards(); updatePrompt();
+  updateCoordinationHint();
   updateTabDots();
 
   // Wire deep-links: any [data-ai-mode] anchor points to the AI tab + mode for this project.
@@ -767,6 +769,20 @@ function setReadiness(id, i) {
    MAP RENDERER — pill nodes with click-to-expand
    ================================================================ */
 
+function updateCoordinationHint() {
+  const el = document.getElementById('coordination-hint');
+  if (!el) return;
+  const hasSupporter = (data.stakeholders || []).some(s => String(s.stance || '').toLowerCase() === 'supporter');
+  const hasBlocker = (data.stakeholders || []).some(s => String(s.stance || '').toLowerCase() === 'blocker');
+  if (!hasSupporter || !hasBlocker) {
+    el.style.display = 'none';
+    return;
+  }
+  const href = 'unit6-coordinate.html?project=' + encodeURIComponent(projectId || '');
+  el.innerHTML = '<strong>Coordination without agreement may be more productive here.</strong> When positions are genuinely irreconcilable, it can help to coordinate around what can be acted on rather than pushing for alignment. <a href="' + href + '">Explore in Coordination Field (Unit 06)</a>.';
+  el.style.display = 'block';
+}
+
 function renderMap() {
   // TODO: expanded card overflows canvas at edges (top/right) — addressed in a later pass.
   const canvas = document.getElementById('map-canvas');
@@ -839,6 +855,7 @@ function renderMap() {
   });
 
   renderMapSummary(enriched, topPriorityIds);
+  updateCoordinationHint();
 }
 
 function renderExpandedCard(s, color, isPriority) {

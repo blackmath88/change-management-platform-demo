@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Unit 06 · Acting Without Agreement</title>
+  <meta property="og:title" content="Change Management Platform">
+  <meta property="og:description" content="An AI-augmented change management workspace: Vision · Forces · Stakeholders · Messaging · Nudges · Coordinate.">
+  <meta property="og:type" content="website">
+  <script src="cmt-shell.js"></script>
+  <link rel="stylesheet" href="cmt-system.css">
+  <style>
+    /* Unit 06 — coordinate-specific layout and interaction styles. */
+    .coord-field { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+    @media (max-width: 900px) { .coord-field { grid-template-columns: 1fr; } }
+
+    .coord-col { background: #fff; border: 1px solid var(--border, #e2e6ec); border-radius: 10px; padding: 16px; }
+    .coord-col-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border, #e2e6ec); }
+    .coord-col-title { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .coord-col-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .coord-col.held .coord-col-dot { background: #8c96a3; }
+    .coord-col.practices .coord-col-dot { background: var(--unit-06-accent); }
+    .coord-col-count { font-size: 0.85rem; color: var(--muted, #6b7280); font-variant-numeric: tabular-nums; }
+    .coord-col-help { font-size: 0.78rem; color: var(--muted, #6b7280); margin-top: -6px; margin-bottom: 12px; line-height: 1.5; }
+
+    .difference-card {
+      background: #fafbfc; border: 1px solid #e2e6ec; border-radius: 8px;
+      padding: 12px; margin-bottom: 10px;
+      opacity: 0.95;
+    }
+    .diff-row { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .diff-side-label { font-size: 0.75rem; font-weight: 600; color: var(--muted, #6b7280); text-align: center; padding-top: 4px; }
+    .diff-side-A { color: #1f5aa8; }
+    .diff-side-B { color: #a8321f; }
+    .diff-input { width: 100%; padding: 6px 8px; border: 1px solid #d5dae2; border-radius: 6px; font-size: 0.85rem; font-family: inherit; background: #fff; }
+    .diff-input.holders { font-size: 0.78rem; color: #444; }
+    .diff-values { width: 100%; padding: 6px 8px; border: 1px solid #d5dae2; border-radius: 6px; font-size: 0.8rem; font-family: inherit; background: #fff; margin-top: 6px; min-height: 40px; resize: vertical; }
+    .diff-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e6ec; gap: 10px; }
+    .diff-conf-wrap { display: flex; align-items: center; gap: 6px; flex: 1; }
+    .diff-conf-label { font-size: 0.72rem; color: var(--muted, #6b7280); }
+    .diff-conf-track { flex: 1; height: 6px; background: #e2e6ec; border-radius: 3px; cursor: pointer; position: relative; max-width: 120px; }
+    .diff-conf-fill { position: absolute; left: 0; top: 0; height: 100%; background: #8c96a3; border-radius: 3px; }
+    .diff-conf-val { font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--muted, #6b7280); min-width: 22px; }
+    .diff-remove { background: none; border: none; color: #b42318; cursor: pointer; font-size: 1.1rem; padding: 2px 6px; line-height: 1; }
+
+    .practice-card {
+      background: #fff; border: 1px solid #d5dae2; border-radius: 8px;
+      padding: 12px; margin-bottom: 10px;
+      border-left: 3px solid var(--unit-06-accent);
+    }
+    .practice-top { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .practice-label-input { flex: 1; padding: 6px 8px; border: 1px solid #d5dae2; border-radius: 6px; font-size: 0.9rem; font-weight: 500; font-family: inherit; }
+    .practice-bridges { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e6ec; }
+    .practice-bridges-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted, #6b7280); margin-bottom: 6px; }
+    .practice-bridge-row {
+      background: #fafbfc; border: 1px solid #eef1f5; border-radius: 6px;
+      padding: 8px; margin-bottom: 6px;
+    }
+    .practice-bridge-diff-label { font-size: 0.78rem; font-weight: 500; margin-bottom: 6px; color: #333; }
+    .practice-bridge-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .practice-bridge-side { display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: 4px; background: #fff; border: 1px solid #eef1f5; }
+    .practice-bridge-side-head { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; }
+    .practice-bridge-side input[type="checkbox"] { accent-color: var(--unit-06-accent); }
+    .practice-bridge-reason { width: 100%; padding: 4px 6px; border: 1px solid #d5dae2; border-radius: 4px; font-size: 0.75rem; font-family: inherit; }
+    .practice-bridge-reason:disabled { background: #f5f6f8; color: #aaa; }
+    .practice-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e6ec; gap: 10px; }
+    .practice-flag { font-size: 0.72rem; color: #b85c00; }
+    .practice-flag.good { color: #1f7a4d; }
+
+    .add-coord-btn { width: 100%; padding: 8px; background: #fff; border: 1px dashed #c5cbd6; border-radius: 8px; color: var(--muted, #6b7280); font-size: 0.85rem; cursor: pointer; font-family: inherit; }
+    .add-coord-btn:hover { border-color: var(--unit-06-accent); color: var(--unit-06-accent); }
+
+    .coverage-bar { background: var(--unit-06-accent-soft); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+    .coverage-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .coverage-title { font-size: 0.85rem; font-weight: 600; color: var(--unit-06-accent); text-transform: uppercase; letter-spacing: 0.04em; }
+    .coverage-score { font-size: 1.4rem; font-weight: 600; color: var(--unit-06-accent); font-variant-numeric: tabular-nums; }
+    .coverage-track { height: 6px; background: #fff; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+    .coverage-fill { height: 100%; background: var(--unit-06-accent); border-radius: 3px; transition: width 0.2s; }
+    .coverage-interp { font-size: 0.8rem; color: #555; line-height: 1.5; }
+  </style>
+</head>
+<body class="unit-page unit-06-page">
+  <div class="app-shell">
+    <div id="sidebar-mount" data-active="unit6-coordinate.html"></div>
+
+    <header class="topbar">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <span class="meta-label">Unit 06</span>
+        <span class="meta-label">/</span>
+        <span class="meta-label crumb-current">Acting Without Agreement</span>
+        <span class="topbar-sep" id="topbar-sep" style="display:none;">·</span>
+      </nav>
+      <div class="topbar-actions">
+        <span class="save-indicator" id="save-indicator">—</span>
+        <button class="btn" onclick="openAiPanel()">AI Reflection</button>
+        <a class="btn btn-primary" href="index.html">Command Center</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="main-inner">
+        <section class="page-head">
+          <div>
+            <div class="eyebrow">Unit 06 · Acting Without Agreement</div>
+            <h1 class="page-title">What can we do together when we cannot agree?</h1>
+            <p class="page-subtitle">Some differences will not converge — they are values, not information. This unit maps the held differences and the practices your system can act on regardless. Coordination without agreement is a legitimate outcome, not a failure.</p>
+          </div>
+        </section>
+
+        <div class="tabbar">
+          <button class="tab-btn active" data-tab="field" onclick="switchTab('field',this)"><span class="tab-dot" data-tabdot="field"></span>Coordination Field</button>
+          <button class="tab-btn" data-tab="analysis" onclick="switchTab('analysis',this)"><span class="tab-dot" data-tabdot="analysis"></span>Analysis</button>
+          <button class="tab-btn tab-btn-ai" data-tab="ai" onclick="openAiPanel()">AI Reflection</button>
+        </div>
+
+        <section class="module">
+          <div class="module-body">
+            <div class="pane active" id="pane-field">
+              <div class="pane-head">
+                <div class="pane-eyebrow">Unit 06 · Coordination Field</div>
+                <h1 class="pane-title">Map what will not converge — and what can be coordinated anyway</h1>
+                <p class="pane-desc">On the left, name the differences that will not resolve. On the right, name concrete practices each side could back — for their own reasons. Coordination does not require shared conviction, only overlapping action.</p>
+              </div>
+
+              <div id="upstream-carry" class="hint-box" style="display:none;">
+                <strong>From your case:</strong> <span id="upstream-carry-text"></span>
+              </div>
+
+              <div class="coverage-bar">
+                <div class="coverage-head">
+                  <span class="coverage-title">Coordination coverage</span>
+                  <span class="coverage-score" id="coverage-score">—</span>
+                </div>
+                <div class="coverage-track"><div class="coverage-fill" id="coverage-fill" style="width:0%"></div></div>
+                <div class="coverage-interp" id="coverage-interp">Add held differences and coordinatable practices to see coverage.</div>
+              </div>
+
+              <div class="coord-field">
+                <div class="coord-col held">
+                  <div class="coord-col-head">
+                    <div class="coord-col-title"><span class="coord-col-dot"></span>Held differences</div>
+                    <div class="coord-col-count" id="differences-count">0</div>
+                  </div>
+                  <div class="coord-col-help">Positions that will not converge — values, identity, or fundamental interest. Log them so you stop trying to resolve them and start coordinating around them.</div>
+                  <div id="differences-list"></div>
+                  <button class="add-coord-btn" onclick="addDifference()">+ Add held difference</button>
+                </div>
+
+                <div class="coord-col practices">
+                  <div class="coord-col-head">
+                    <div class="coord-col-title"><span class="coord-col-dot"></span>Coordinatable practices</div>
+                    <div class="coord-col-count" id="practices-count">0</div>
+                  </div>
+                  <div class="coord-col-help">Concrete practices — norms, infrastructure, protocols, shared language — that each side can back for their own reasons. If only one side has a reason, it is alignment, not coordination-without-agreement.</div>
+                  <div id="practices-list"></div>
+                  <button class="add-coord-btn" onclick="addPractice()">+ Add coordinatable practice</button>
+                </div>
+              </div>
+
+              <a class="ai-cue" href="#" data-ai-mode="find_practices"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Generate coordinatable practices from the differences</span><span class="ai-cue-arrow">→</span></a>
+            </div>
+
+            <div class="pane" id="pane-analysis">
+              <div class="pane-head">
+                <div class="pane-eyebrow">Unit 06 · Analysis</div>
+                <h1 class="pane-title">Is coordination actually possible here?</h1>
+                <p class="pane-desc">The field is only useful if you interrogate it. Check for premature un-resolvability, for practices that are alignment in disguise, and for differences with no bridging practice.</p>
+              </div>
+              <div class="analysis-grid" id="analysis-grid"></div>
+              <div class="field-group">
+                <label class="label">Your analysis — what can this system coordinate on, and what remains held?</label>
+                <textarea class="field-textarea" id="coord-summary" rows="5" style="min-height:120px;" placeholder="Summarise: which differences are truly held? Which practices are strongest? Where is coordination fragile? What can you honestly ship without requiring agreement?" oninput="autosave()"></textarea>
+              </div>
+              <a class="ai-cue" href="#" data-ai-mode="stress_test"><span class="ai-cue-badge">AI</span><span class="ai-cue-action">Stress-test the coordination</span><span class="ai-cue-arrow">→</span></a>
+            </div>
+
+            <div class="pane" id="pane-ai">
+              <p class="ai-tab-explainer">Prompts are generated from your current case data — vision, stakeholders, held differences, coordinatable practices — and tailored to this unit's framework. Copy them into Claude, ChatGPT, or your preferred AI tool.</p>
+              <div class="pane-head">
+                <div class="pane-eyebrow">Unit 06 · AI &amp; Export</div>
+                <h1 class="pane-title">Test what will hold and what will not</h1>
+                <p class="pane-desc">Choose a mode and copy the prompt. Your full coordination field is embedded automatically.</p>
+              </div>
+              <div class="ai-mode-grid" id="ai-mode-grid"></div>
+              <div class="prompt-box">
+                <div class="prompt-box-head"><span class="prompt-box-label">Ready-to-use prompt — your project data is included</span></div>
+                <div class="prompt-text" id="prompt-output">Add held differences to generate a prompt.</div>
+                <div class="prompt-actions">
+                  <button class="btn btn-inverse" id="btn-copy" onclick="copyPrompt(this)">Copy prompt</button>
+                  <a class="btn btn-secondary" href="https://claude.ai" target="_blank" onclick="softCopy()">Open Claude ↗</a>
+                  <a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" onclick="softCopy()">Open ChatGPT ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="ai-panel-overlay" id="ai-panel-overlay" role="dialog" aria-modal="true" aria-label="AI reflection panel">
+    <div class="ai-panel" id="ai-panel">
+      <div class="ai-panel-head">
+        <div>
+          <div class="ai-panel-title">AI Reflection</div>
+          <div class="ai-panel-sub">Your case data is already embedded in these prompts — structured around Acting Without Agreement. Copy one into Claude, ChatGPT, or your preferred AI tool. The AI gets your context without you having to explain it.</div>
+        </div>
+        <button class="ai-panel-close" onclick="closeAiPanel()" title="Close (Esc)" aria-label="Close AI panel">×</button>
+      </div>
+      <div class="ai-panel-body" id="ai-panel-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="cmt-client.js"></script>
+  <script>
+'use strict';
+
+const AI_TASKS = {
+  test_unresolvability:
+    'Act as an experienced facilitator working with the Whole-System Development frame (Janoff). Test whether these held differences are truly unresolvable:\n'
+    + '1. For each difference — is this a VALUES conflict (about what we care about), an IDENTITY conflict (about who we are), or an INFORMATION/INTEREST gap that could still converge with more dialogue?\n'
+    + '2. Which differences are being labelled unresolvable prematurely? Where might convergence still be worth attempting?\n'
+    + '3. For the truly unresolvable ones — what makes them unresolvable, and how do you know? What evidence would change your mind?\n'
+    + '4. Is there a difference here that is actually a symptom of a deeper, unnamed one?',
+  find_practices:
+    'Given these irreconcilable positions, generate coordinatable practices — things each side could back for their OWN reasons, not shared ones:\n'
+    + '1. For each held difference, suggest 2–3 concrete practices that each side could support for different reasons. Think across categories: disclosure norms, shared infrastructure, procedural agreements, common vocabulary, division of decision rights, opt-in/opt-out structures, shared measurement.\n'
+    + '2. For each suggestion, name the reason side A would back it, and the different reason side B would back it. If you cannot name both, it is not a coordinatable practice.\n'
+    + '3. Which suggested practice would be highest-leverage — bridging multiple differences at once?\n'
+    + '4. Flag any suggestion that quietly favours one side.',
+  stress_test:
+    'Stress-test the coordinatable practices already logged:\n'
+    + '1. For each practice — is it truly neutral, or does it quietly favour one side? Where would it break down under pressure?\n'
+    + '2. Which practices are actually alignment in disguise (only one side has real reason to back them)?\n'
+    + '3. What would each backing side need to see happen in the first 90 days to keep supporting the practice?\n'
+    + '4. Which practice is most fragile — most at risk of collapsing if one champion leaves or one incident happens? How to reduce that risk without forcing agreement?',
+  bridge_messaging:
+    'Bridge these coordinatable practices into a communication strategy (Unit 04):\n'
+    + '1. For each practice — how do we communicate it WITHOUT re-igniting the underlying values dispute?\n'
+    + '2. What language routes around the disagreement — meets each side in their own logic?\n'
+    + '3. What must NOT be said in shared communication (would collapse the coordination)?\n'
+    + '4. Suggest a one-line framing for each practice that both sides can live with, even if they read it differently.',
+};
+
+const AI_MODES = [
+  { key:'test_unresolvability', title:'Test the un-resolvability', desc:'Are these differences truly unresolvable, or just under-discussed? Interrogate each before committing to coordination-without-agreement.' },
+  { key:'find_practices',       title:'Find coordinatable practices', desc:'What concrete practices could each side back for different reasons? Generate candidates from the held differences.' },
+  { key:'stress_test',          title:'Stress-test coordination',    desc:'Are the logged practices truly neutral, or quietly favouring one side? Where do they break under pressure?' },
+  { key:'bridge_messaging',     title:'Bridge to Messaging',         desc:'How to communicate these practices without re-igniting the underlying disagreement. Prepares Unit 04.' },
+];
+
+let projectId = null, activeMode = 'test_unresolvability', saveTimer = null;
+let vision = {}, stakeholders = {};
+let data = { differences: [], practices: [], summary: '' };
+
+function uid() { return Math.random().toString(36).slice(2, 9); }
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  projectId = params.get('project') || localStorage.getItem('cmt_current_project');
+  if (projectId && window.CMT) CMT.setCurrentProjectId(projectId);
+  try {
+    const allModules = await CMT.loadAllModules(projectId);
+    if (allModules.vision) vision = allModules.vision;
+    if (allModules.stakeholders) stakeholders = allModules.stakeholders;
+    if (allModules.coordinate) data = { ...data, ...allModules.coordinate };
+  } catch(e) {
+    try {
+      const vRaw = localStorage.getItem('cmt_module_' + projectId + '_vision');
+      if (vRaw) vision = JSON.parse(vRaw);
+      const sRaw = localStorage.getItem('cmt_module_' + projectId + '_stakeholders');
+      if (sRaw) stakeholders = JSON.parse(sRaw);
+      const saved = localStorage.getItem('cmt_module_' + projectId + '_coordinate');
+      if (saved) data = { ...data, ...JSON.parse(saved) };
+    } catch(e2) {}
+  }
+
+  const carryBits = [];
+  if (vision.ctx_title) carryBits.push(vision.ctx_title);
+  if (stakeholders.stakeholders && stakeholders.stakeholders.length) {
+    carryBits.push(stakeholders.stakeholders.length + ' stakeholders mapped');
+  }
+  if (carryBits.length) {
+    document.getElementById('upstream-carry-text').textContent = carryBits.join(' · ');
+    document.getElementById('upstream-carry').style.display = 'block';
+  }
+  if (vision.ctx_title) document.getElementById('topbar-project').textContent = vision.ctx_title;
+  if (vision.ctx_org) { document.getElementById('topbar-org').textContent = vision.ctx_org; document.getElementById('topbar-sep').style.display = 'inline'; }
+
+  renderDifferences();
+  renderPractices();
+  updateCoverage();
+  updateAnalysis();
+  renderAiCards();
+  updatePrompt();
+  if (data.summary) document.getElementById('coord-summary').value = data.summary;
+  updateTabDots();
+
+  if (projectId) {
+    document.querySelectorAll('[data-ai-mode]').forEach(a => {
+      const key = a.getAttribute('data-ai-mode');
+      a.setAttribute('href', window.location.pathname + '?project=' + encodeURIComponent(projectId) + '&ai=' + encodeURIComponent(key));
+    });
+  }
+  const aiParam = params.get('ai');
+  if (aiParam && AI_MODES.some(m => m.key === aiParam)) {
+    openAiPanel();
+    selectMode(aiParam);
+  }
+  document.getElementById('ai-panel-overlay')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAiPanel();
+  });
+}
+
+function tabFilled(tab) {
+  if (tab === 'field') return (data.differences || []).length > 0 || (data.practices || []).length > 0;
+  if (tab === 'analysis') return !!(data.summary && data.summary.trim());
+  return false;
+}
+function updateTabDots() {
+  document.querySelectorAll('.tab-dot').forEach(el => {
+    const t = el.getAttribute('data-tabdot');
+    el.classList.toggle('filled', tabFilled(t));
+  });
+}
+
+function addDifference() {
+  data.differences.push({
+    id: uid(),
+    positionA_label: '', positionA_holders: '',
+    positionB_label: '', positionB_holders: '',
+    values_at_stake: '',
+    unresolvable_confidence: 3
+  });
+  renderDifferences();
+  renderPractices();
+  autosave();
+}
+function removeDifference(id) {
+  data.differences = data.differences.filter(d => d.id !== id);
+  data.practices.forEach(p => { if (p.bridges) delete p.bridges[id]; });
+  renderDifferences();
+  renderPractices();
+  updateCoverage();
+  updateAnalysis();
+  autosave();
+}
+function updateDiff(id, field, val) {
+  const d = data.differences.find(x => x.id === id);
+  if (!d) return;
+  d[field] = val;
+  if (field === 'positionA_label' || field === 'positionB_label') {
+    renderPractices();
+  }
+  autosave();
+}
+function setDiffConf(id, e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const d = data.differences.find(x => x.id === id);
+  if (!d) return;
+  d.unresolvable_confidence = Math.max(1, Math.min(5, Math.round(pct * 5)));
+  renderDifferences();
+  updateAnalysis();
+  autosave();
+}
+function renderDifferences() {
+  const list = document.getElementById('differences-list');
+  if (!list) return;
+  list.innerHTML = data.differences.map((d, i) =>
+    '<div class="difference-card">'
+    + '<div class="diff-row">'
+    +   '<span class="diff-side-label diff-side-A">A</span>'
+    +   '<input class="diff-input" placeholder="Position A — what one side holds…" value="' + esc(d.positionA_label) + '" oninput="updateDiff(\'' + d.id + '\',\'positionA_label\',this.value)">'
+    + '</div>'
+    + '<div class="diff-row">'
+    +   '<span></span>'
+    +   '<input class="diff-input holders" placeholder="Who holds Position A?" value="' + esc(d.positionA_holders) + '" oninput="updateDiff(\'' + d.id + '\',\'positionA_holders\',this.value)">'
+    + '</div>'
+    + '<div class="diff-row">'
+    +   '<span class="diff-side-label diff-side-B">B</span>'
+    +   '<input class="diff-input" placeholder="Position B — what the other side holds…" value="' + esc(d.positionB_label) + '" oninput="updateDiff(\'' + d.id + '\',\'positionB_label\',this.value)">'
+    + '</div>'
+    + '<div class="diff-row">'
+    +   '<span></span>'
+    +   '<input class="diff-input holders" placeholder="Who holds Position B?" value="' + esc(d.positionB_holders) + '" oninput="updateDiff(\'' + d.id + '\',\'positionB_holders\',this.value)">'
+    + '</div>'
+    + '<textarea class="diff-values" placeholder="Values at stake — why this will not converge (identity, worldview, fundamental interest)…" oninput="updateDiff(\'' + d.id + '\',\'values_at_stake\',this.value)">' + esc(d.values_at_stake) + '</textarea>'
+    + '<div class="diff-meta-row">'
+    +   '<div class="diff-conf-wrap">'
+    +     '<span class="diff-conf-label">Un-resolvable</span>'
+    +     '<div class="diff-conf-track" onclick="setDiffConf(\'' + d.id + '\',event)">'
+    +       '<div class="diff-conf-fill" style="width:' + (d.unresolvable_confidence * 20) + '%"></div>'
+    +     '</div>'
+    +     '<span class="diff-conf-val">' + d.unresolvable_confidence + '/5</span>'
+    +   '</div>'
+    +   '<button class="diff-remove" onclick="removeDifference(\'' + d.id + '\')" title="Remove">×</button>'
+    + '</div>'
+    + '</div>'
+  ).join('');
+  document.getElementById('differences-count').textContent = data.differences.length;
+}
+
+function addPractice() {
+  data.practices.push({
+    id: uid(),
+    label: '',
+    bridges: {},
+    confidence: 3
+  });
+  renderPractices();
+  autosave();
+}
+function removePractice(id) {
+  data.practices = data.practices.filter(p => p.id !== id);
+  renderPractices();
+  updateCoverage();
+  updateAnalysis();
+  autosave();
+}
+function updatePracticeLabel(id, val) {
+  const p = data.practices.find(x => x.id === id);
+  if (!p) return;
+  p.label = val;
+  autosave();
+}
+function setPracticeConf(id, e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const p = data.practices.find(x => x.id === id);
+  if (!p) return;
+  p.confidence = Math.max(1, Math.min(5, Math.round(pct * 5)));
+  renderPractices();
+  updateAnalysis();
+  autosave();
+}
+function toggleBridge(practiceId, diffId, side) {
+  const p = data.practices.find(x => x.id === practiceId);
+  if (!p) return;
+  if (!p.bridges[diffId]) p.bridges[diffId] = { sideA: false, reasonA: '', sideB: false, reasonB: '' };
+  const key = side === 'A' ? 'sideA' : 'sideB';
+  p.bridges[diffId][key] = !p.bridges[diffId][key];
+  renderPractices();
+  updateCoverage();
+  updateAnalysis();
+  autosave();
+}
+function updateBridgeReason(practiceId, diffId, side, val) {
+  const p = data.practices.find(x => x.id === practiceId);
+  if (!p) return;
+  if (!p.bridges[diffId]) p.bridges[diffId] = { sideA: false, reasonA: '', sideB: false, reasonB: '' };
+  const key = side === 'A' ? 'reasonA' : 'reasonB';
+  p.bridges[diffId][key] = val;
+  autosave();
+}
+function renderPractices() {
+  const list = document.getElementById('practices-list');
+  if (!list) return;
+  list.innerHTML = data.practices.map((p, i) => {
+    const bridgeRows = data.differences.length ? data.differences.map(d => {
+      const b = p.bridges[d.id] || { sideA: false, reasonA: '', sideB: false, reasonB: '' };
+      const dLabel = (d.positionA_label || 'A') + ' vs ' + (d.positionB_label || 'B');
+      return '<div class="practice-bridge-row">'
+        + '<div class="practice-bridge-diff-label">' + esc(dLabel) + '</div>'
+        + '<div class="practice-bridge-sides">'
+        +   '<div class="practice-bridge-side">'
+        +     '<label class="practice-bridge-side-head"><input type="checkbox"' + (b.sideA ? ' checked' : '') + ' onchange="toggleBridge(\'' + p.id + '\',\'' + d.id + '\',\'A\')"> <span class="diff-side-A">A can back this</span></label>'
+        +     '<input class="practice-bridge-reason" placeholder="Reason A would support…" value="' + esc(b.reasonA) + '"' + (b.sideA ? '' : ' disabled') + ' oninput="updateBridgeReason(\'' + p.id + '\',\'' + d.id + '\',\'A\',this.value)">'
+        +   '</div>'
+        +   '<div class="practice-bridge-side">'
+        +     '<label class="practice-bridge-side-head"><input type="checkbox"' + (b.sideB ? ' checked' : '') + ' onchange="toggleBridge(\'' + p.id + '\',\'' + d.id + '\',\'B\')"> <span class="diff-side-B">B can back this</span></label>'
+        +     '<input class="practice-bridge-reason" placeholder="Reason B would support…" value="' + esc(b.reasonB) + '"' + (b.sideB ? '' : ' disabled') + ' oninput="updateBridgeReason(\'' + p.id + '\',\'' + d.id + '\',\'B\',this.value)">'
+        +   '</div>'
+        + '</div>'
+        + '</div>';
+    }).join('') : '<div style="font-size:0.78rem;color:var(--muted,#6b7280);padding:8px;">Add held differences first to define what this practice bridges.</div>';
+
+    const bridged = Object.values(p.bridges || {});
+    const bothSides = bridged.filter(b => b.sideA && b.sideB).length;
+    const oneSided = bridged.filter(b => (b.sideA && !b.sideB) || (b.sideB && !b.sideA)).length;
+    let flag = '';
+    if (bothSides > 0) flag = '<span class="practice-flag good">✓ bridges ' + bothSides + ' difference' + (bothSides === 1 ? '' : 's') + '</span>';
+    else if (oneSided > 0) flag = '<span class="practice-flag">⚠ one-sided — this is alignment, not coordination</span>';
+    else if (data.differences.length) flag = '<span class="practice-flag" style="color:var(--muted,#6b7280);">Not yet linked to any difference</span>';
+
+    return '<div class="practice-card">'
+      + '<div class="practice-top">'
+      +   '<input class="practice-label-input" placeholder="Practice — a concrete norm, protocol, artifact, infrastructure…" value="' + esc(p.label) + '" oninput="updatePracticeLabel(\'' + p.id + '\',this.value)">'
+      +   '<button class="diff-remove" onclick="removePractice(\'' + p.id + '\')" title="Remove">×</button>'
+      + '</div>'
+      + '<div class="practice-bridges">'
+      +   '<div class="practice-bridges-title">Bridging</div>'
+      +   bridgeRows
+      + '</div>'
+      + '<div class="practice-meta-row">'
+      +   '<div class="diff-conf-wrap">'
+      +     '<span class="diff-conf-label">Coordination confidence</span>'
+      +     '<div class="diff-conf-track" onclick="setPracticeConf(\'' + p.id + '\',event)">'
+      +       '<div class="diff-conf-fill" style="width:' + (p.confidence * 20) + '%;background:var(--unit-06-accent);"></div>'
+      +     '</div>'
+      +     '<span class="diff-conf-val">' + p.confidence + '/5</span>'
+      +   '</div>'
+      +   flag
+      + '</div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('practices-count').textContent = data.practices.length;
+}
+
+function computeCoverage() {
+  const total = data.differences.length;
+  if (!total) return { covered: 0, total: 0, pct: 0 };
+  let covered = 0;
+  data.differences.forEach(d => {
+    const bridged = data.practices.some(p => {
+      const b = p.bridges && p.bridges[d.id];
+      return b && b.sideA && b.sideB;
+    });
+    if (bridged) covered++;
+  });
+  return { covered, total, pct: Math.round((covered / total) * 100) };
+}
+function updateCoverage() {
+  const c = computeCoverage();
+  const scoreEl = document.getElementById('coverage-score');
+  const fillEl = document.getElementById('coverage-fill');
+  const interpEl = document.getElementById('coverage-interp');
+  if (!c.total) {
+    scoreEl.textContent = '—';
+    fillEl.style.width = '0%';
+    interpEl.textContent = 'Add held differences and coordinatable practices to see coverage.';
+    return;
+  }
+  scoreEl.textContent = c.covered + ' / ' + c.total;
+  fillEl.style.width = c.pct + '%';
+  let interp = '';
+  if (c.pct === 0) interp = 'No difference is yet bridged by a practice both sides can back. This is where the work begins.';
+  else if (c.pct < 50) interp = 'Some coverage — but most held differences still lack a coordinatable practice. Coordination is thin.';
+  else if (c.pct < 100) interp = 'Growing coverage. Some differences still need bridging practices before the system can act.';
+  else interp = 'Every held difference has at least one practice both sides can back. Coordination without agreement is structurally possible here.';
+  interpEl.textContent = interp;
+}
+function updateAnalysis() {
+  const grid = document.getElementById('analysis-grid');
+  if (!grid) return;
+  if (!data.differences.length && !data.practices.length) {
+    grid.innerHTML = '<div style="grid-column:span 2;font-size:0.85rem;color:var(--muted);padding:16px 0;">Add differences and practices in the Coordination Field tab to see analysis.</div>';
+    return;
+  }
+  const c = computeCoverage();
+  const uncovered = data.differences.filter(d => !data.practices.some(p => {
+    const b = p.bridges && p.bridges[d.id];
+    return b && b.sideA && b.sideB;
+  }));
+  const alignmentRisk = data.practices.filter(p => {
+    const bridged = Object.values(p.bridges || {});
+    const oneSided = bridged.filter(b => (b.sideA && !b.sideB) || (b.sideB && !b.sideA)).length;
+    const bothSides = bridged.filter(b => b.sideA && b.sideB).length;
+    return oneSided > 0 && bothSides === 0;
+  });
+  const convergenceTrap = data.differences.filter(d => d.unresolvable_confidence <= 2);
+
+  grid.innerHTML =
+    '<div class="analysis-card"><div class="analysis-card-title">Coverage</div><div class="analysis-card-body">'
+    + '<strong>' + c.covered + ' of ' + c.total + '</strong> held differences have at least one bridging practice both sides can back.'
+    + (uncovered.length ? '<ul style="margin-top:8px;">' + uncovered.map(d => '<li>' + esc((d.positionA_label || 'A') + ' vs ' + (d.positionB_label || 'B')) + '</li>').join('') + '</ul>' : '')
+    + '</div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Alignment risk</div><div class="analysis-card-body">'
+    + (alignmentRisk.length
+        ? '<strong>' + alignmentRisk.length + '</strong> practice' + (alignmentRisk.length === 1 ? '' : 's') + ' backed by only one side — this is alignment, not coordination-without-agreement.<ul style="margin-top:8px;">' + alignmentRisk.map(p => '<li>' + esc(p.label || '(unlabelled)') + '</li>').join('') + '</ul>'
+        : '<span style="color:var(--muted);">No one-sided practices detected. Good.</span>')
+    + '</div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Convergence trap</div><div class="analysis-card-body">'
+    + (convergenceTrap.length
+        ? '<strong>' + convergenceTrap.length + '</strong> difference' + (convergenceTrap.length === 1 ? '' : 's') + ' logged with low un-resolvability confidence (≤2/5). These may still converge with dialogue — do not give up on agreement too fast.<ul style="margin-top:8px;">' + convergenceTrap.map(d => '<li>' + esc((d.positionA_label || 'A') + ' vs ' + (d.positionB_label || 'B')) + '</li>').join('') + '</ul>'
+        : '<span style="color:var(--muted);">Held differences look genuinely held.</span>')
+    + '</div></div>'
+    + '<div class="analysis-card"><div class="analysis-card-title">Strongest coordination</div><div class="analysis-card-body">'
+    + (function(){
+        const scored = data.practices.map(p => {
+          const bridged = Object.values(p.bridges || {});
+          const bothSides = bridged.filter(b => b.sideA && b.sideB).length;
+          return { p, score: bothSides * p.confidence };
+        }).filter(x => x.score > 0).sort((a,b) => b.score - a.score).slice(0,3);
+        return scored.length
+          ? '<ul>' + scored.map(x => '<li><strong>' + esc(x.p.label || '(unlabelled)') + '</strong> — bridges ' + Object.values(x.p.bridges || {}).filter(b => b.sideA && b.sideB).length + ' · confidence ' + x.p.confidence + '/5</li>').join('') + '</ul>'
+          : '<span style="color:var(--muted);">No practices yet backed by both sides on any difference.</span>';
+      })()
+    + '</div></div>';
+}
+
+function switchTab(tab, btn) {
+  if (tab === 'ai') { openAiPanel(); return; }
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tab === 'analysis') updateAnalysis();
+}
+function renderAiCards() {
+  const grid = document.getElementById('ai-mode-grid');
+  if (!grid) return;
+  grid.innerHTML = AI_MODES.map(m =>
+    '<div class="ai-mode-card' + (m.key === activeMode ? ' active' : '') + '" data-mode="' + m.key + '" title="' + esc(m.desc) + '" onclick="selectMode(\'' + m.key + '\')">'
+    +   '<div class="ai-mode-title">' + esc(m.title) + '</div>'
+    +   '<div class="ai-mode-desc">' + esc(m.desc) + '</div>'
+    +   '<div class="ai-mode-task"><span class="ai-mode-task-label">Task</span>' + esc(AI_TASKS[m.key]) + '</div>'
+    +   '<button class="ai-mode-use" type="button" onclick="event.stopPropagation();selectMode(\'' + m.key + '\')">Use this task</button>'
+    + '</div>'
+  ).join('');
+}
+function selectMode(mode) {
+  activeMode = mode;
+  renderAiCards();
+  updatePrompt();
+}
+function openAiPanel() {
+  const overlay = document.getElementById('ai-panel-overlay');
+  const panelBody = document.getElementById('ai-panel-body');
+  if (!overlay || !panelBody) return;
+  const pills = AI_MODES.map(m =>
+    '<button class="ai-panel-mode-pill' + (m.key === activeMode ? ' active' : '') +
+    '" data-mode="' + m.key + '" onclick="setPanelMode(\'' + m.key + '\')">' +
+    esc(m.title) + '</button>'
+  ).join('');
+  panelBody.innerHTML =
+    '<div class="ai-panel-modes">' + pills + '</div>' +
+    '<div class="ai-panel-prompt-zone"><div class="prompt-text" id="panel-prompt-text"></div></div>' +
+    '<div class="ai-panel-actions">' +
+      '<button class="btn btn-inverse" onclick="copyPanelPrompt(this)">Copy prompt</button>' +
+      '<a class="btn btn-secondary" href="https://claude.ai" target="_blank" rel="noopener">Claude ↗</a>' +
+      '<a class="btn btn-secondary" href="https://chat.openai.com" target="_blank" rel="noopener">ChatGPT ↗</a>' +
+    '</div>';
+  updatePanelPrompt();
+  overlay.classList.add('visible');
+  document.body.classList.add('ai-panel-active');
+}
+function closeAiPanel() {
+  const overlay = document.getElementById('ai-panel-overlay');
+  if (!overlay) return;
+  overlay.classList.remove('visible');
+  document.body.classList.remove('ai-panel-active');
+}
+function setPanelMode(mode) {
+  activeMode = mode;
+  document.querySelectorAll('.ai-panel-mode-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.mode === mode);
+  });
+  updatePanelPrompt();
+}
+function updatePanelPrompt() {
+  if (typeof updatePrompt === 'function') updatePrompt();
+  const target = document.getElementById('panel-prompt-text');
+  const source = document.getElementById('prompt-output');
+  if (target && source) target.textContent = source.textContent;
+}
+function copyPanelPrompt(btn) {
+  const el = document.getElementById('panel-prompt-text');
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('ai-panel-overlay');
+    if (overlay && overlay.classList.contains('visible')) closeAiPanel();
+  }
+});
+
+function autosave() {
+  data.summary = document.getElementById('coord-summary')?.value || '';
+  updateCoverage();
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = 'Saving'; ind.className = 'save-indicator saving';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    localStorage.setItem('cmt_module_' + projectId + '_coordinate', JSON.stringify(data));
+    if (window.CMT) CMT.saveModule(projectId, 'coordinate', data).catch(() => {});
+    updateTabDots();
+    if (window.CMTShell && window.CMTShell.refreshDots) window.CMTShell.refreshDots(projectId);
+    ind.textContent = 'Saved'; ind.className = 'save-indicator saved';
+    setTimeout(() => { ind.textContent = '—'; ind.className = 'save-indicator'; }, 2000);
+  }, 800);
+}
+
+function updatePrompt() {
+  if (!vision.ctx_title) {
+    document.getElementById('prompt-output').textContent =
+      'Complete Unit 01 (Vision) to generate a richer prompt. Each unit\'s AI prompt builds on the work from earlier units.';
+    return;
+  }
+  let stakeSummary = '';
+  if (stakeholders.stakeholders && stakeholders.stakeholders.length) {
+    stakeSummary = 'STAKEHOLDERS (from Unit 03):\n'
+      + stakeholders.stakeholders.slice(0, 8).map(s =>
+          '  · ' + (s.name || '(unlabelled)') + (s.stance ? ' [' + s.stance + ']' : '')
+        ).join('\n')
+      + (stakeholders.stakeholders.length > 8 ? '\n  · … ' + (stakeholders.stakeholders.length - 8) + ' more' : '')
+      + '\n\n';
+  }
+
+  const diffList = data.differences.length
+    ? data.differences.map((d, i) =>
+        '  △ Difference ' + (i + 1) + ':\n'
+        + '     A: ' + (d.positionA_label || '(unlabelled)') + (d.positionA_holders ? ' — held by ' + d.positionA_holders : '') + '\n'
+        + '     B: ' + (d.positionB_label || '(unlabelled)') + (d.positionB_holders ? ' — held by ' + d.positionB_holders : '') + '\n'
+        + '     Values at stake: ' + (d.values_at_stake || '(not specified)') + '\n'
+        + '     Un-resolvability confidence: ' + d.unresolvable_confidence + '/5'
+      ).join('\n\n')
+    : '  (none logged)';
+
+  const practiceList = data.practices.length
+    ? data.practices.map((p, i) => {
+        const bridged = Object.entries(p.bridges || {}).filter(([_, b]) => b.sideA || b.sideB);
+        const bridgeLines = bridged.length ? bridged.map(([diffId, b]) => {
+          const d = data.differences.find(x => x.id === diffId);
+          if (!d) return '';
+          const dLabel = (d.positionA_label || 'A') + ' vs ' + (d.positionB_label || 'B');
+          const parts = [];
+          if (b.sideA) parts.push('       A backs it because: ' + (b.reasonA || '(reason not specified)'));
+          if (b.sideB) parts.push('       B backs it because: ' + (b.reasonB || '(reason not specified)'));
+          return '     Bridges: ' + dLabel + '\n' + parts.join('\n');
+        }).filter(Boolean).join('\n') : '     (not linked to any difference)';
+        return '  ◇ Practice ' + (i + 1) + ': ' + (p.label || '(unlabelled)') + '\n'
+          + bridgeLines + '\n'
+          + '     Coordination confidence: ' + p.confidence + '/5';
+      }).join('\n\n')
+    : '  (none logged)';
+
+  const c = computeCoverage();
+
+  const base = 'CHANGE MANAGEMENT CONTEXT — Unit 6: Acting Without Agreement\n\n'
+    + 'Initiative: ' + (vision.ctx_title || '(not set)') + '\n'
+    + 'Organisation: ' + (vision.ctx_org || '(not set)') + '\n'
+    + 'Vision: ' + (vision.vision_statement || '(not set)') + '\n\n'
+    + stakeSummary
+    + 'HELD DIFFERENCES (positions that will not converge):\n' + diffList + '\n\n'
+    + 'COORDINATABLE PRACTICES (things each side can back for their own reasons):\n' + practiceList + '\n\n'
+    + 'COORDINATION COVERAGE: ' + (c.total ? c.covered + ' of ' + c.total + ' differences bridged by a both-sides-backed practice (' + c.pct + '%)' : 'no differences logged yet') + '\n\n'
+    + 'PRACTITIONER ANALYSIS:\n' + (data.summary || '(not completed)');
+
+  document.getElementById('prompt-output').textContent = base + '\n\nTASK: ' + AI_TASKS[activeMode];
+}
+
+function copyPrompt(btn) {
+  navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+function softCopy() { navigator.clipboard.writeText(document.getElementById('prompt-output').textContent).catch(() => {}); }
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+init();
+  </script>
+</body>
+</html>

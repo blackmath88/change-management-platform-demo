@@ -24,6 +24,9 @@
   --unit-03-accent: #2b8a8a;
   --unit-04-accent: #cc6a5a;
   --unit-05-accent: #3d8b5a;
+  --unit-06-accent: #4a5a80;
+  --unit-06-accent-soft: #eef1f8;
+  --unit-06-accent-tint: #f7f8fc;
   --ai-accent: #f5c000;
   --ai-accent-hover: #ffd633;
   --ai-accent-strong: #d4a017;
@@ -964,6 +967,10 @@ body.unit-04-page .tab-btn.active:not([data-tab="ai"]) {
 body.unit-05-page .tab-btn.active:not([data-tab="ai"]) {
   color: var(--unit-05-accent);
   background: rgba(61, 139, 90, 0.06);
+}
+body.unit-06-page .tab-btn.active:not([data-tab="ai"]) {
+  color: var(--unit-06-accent);
+  background: rgba(74, 90, 128, 0.06);
 }
 
 .pane {
@@ -2923,6 +2930,8 @@ body.unit-05-page .tab-btn.active:not([data-tab="ai"]) {
 .nav-item.is-active[data-module="communication"] .nav-num { color: var(--unit-04-accent); }
 .nav-item[data-module="nudges"]        .nav-num,
 .nav-item.is-active[data-module="nudges"]        .nav-num { color: var(--unit-05-accent); }
+.nav-item[data-module="coordinate"]    .nav-num,
+.nav-item.is-active[data-module="coordinate"]    .nav-num { color: var(--unit-06-accent); }
 
 /* Active sidebar item picks up the unit accent as a background tint
    (no left border — the universal blue 2px marker stays). */
@@ -2931,6 +2940,7 @@ body.unit-02-page .nav-item.is-active[data-module="forces"]        { background:
 body.unit-03-page .nav-item.is-active[data-module="stakeholders"]  { background: rgba(43, 138, 138, 0.08); }
 body.unit-04-page .nav-item.is-active[data-module="communication"] { background: rgba(204, 106, 90, 0.08); }
 body.unit-05-page .nav-item.is-active[data-module="nudges"]        { background: rgba(61, 139, 90, 0.08); }
+body.unit-06-page .nav-item.is-active[data-module="coordinate"]    { background: rgba(74, 90, 128, 0.08); }
 
 /* Page-head eyebrow takes the matching accent on each unit page.
    Scoped to .page-head so other .eyebrow uses (module headers, etc.)
@@ -2940,6 +2950,7 @@ body.unit-02-page .page-head .eyebrow { color: var(--unit-02-accent); }
 body.unit-03-page .page-head .eyebrow { color: var(--unit-03-accent); }
 body.unit-04-page .page-head .eyebrow { color: var(--unit-04-accent); }
 body.unit-05-page .page-head .eyebrow { color: var(--unit-05-accent); }
+body.unit-06-page .page-head .eyebrow { color: var(--unit-06-accent); }
 
 /* Page-head accent zone: very light tint of the unit's accent + a 4px
    left border in the same accent. Anchors the section visually so the
@@ -2955,6 +2966,7 @@ body.unit-02-page .page-head { background: rgba(196, 132, 58, 0.08); }
 body.unit-03-page .page-head { background: rgba(43, 138, 138, 0.08); }
 body.unit-04-page .page-head { background: rgba(204, 106, 90, 0.08); }
 body.unit-05-page .page-head { background: rgba(61, 139, 90, 0.08); }
+body.unit-06-page .page-head { background: rgba(74, 90, 128, 0.08); }
 
 /* AI tab explainer — small, muted line above the mode-card grid. */
 .ai-tab-explainer {
