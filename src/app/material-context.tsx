@@ -14,6 +14,8 @@ interface MaterialContextValue {
   setMode(mode: MaterialMode): void;
 }
 
+// Keep the pre-Changefield key so an identity update does not reset a person's
+// chosen reading surface.
 const storageKey = "casework.material";
 const materialModes: MaterialMode[] = ["clear", "paper", "fibre"];
 const MaterialContext = createContext<MaterialContextValue | null>(null);

@@ -191,7 +191,7 @@ export function contextBriefToMarkdown(brief: ContextBrief): string {
     }
   }
 
-  lines.push("", "---", "", "Generated from the current Casework record.");
+  lines.push("", "---", "", "Generated from the current Changefield record.");
   return `${lines.join("\n").trim()}\n`;
 }
 

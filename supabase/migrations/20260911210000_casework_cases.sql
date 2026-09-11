@@ -1,4 +1,5 @@
--- Casework authenticated case storage
+-- Changefield authenticated case storage.
+-- Existing casework_* identifiers remain stable for deployed compatibility.
 -- The application remains local-first; this table is the remote replica.
 
 create table if not exists public.casework_cases (

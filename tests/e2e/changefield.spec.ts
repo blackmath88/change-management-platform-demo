@@ -70,6 +70,7 @@ test("keeps the primary portfolio and case surfaces free of detectable WCAG A/AA
   page,
 }) => {
   await page.goto("/");
+  await expect(page).toHaveTitle("Changefield");
   await expect(page.getByRole("heading", { name: /change becomes legible/i })).toBeVisible();
 
   const portfolioResults = await new AxeBuilder({ page })

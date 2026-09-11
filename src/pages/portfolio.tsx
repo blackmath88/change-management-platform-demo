@@ -142,7 +142,7 @@ function ImportCaseButton() {
         Import a record ↑
         <input
           type="file"
-          accept=".json,.casework.json,application/json"
+          accept=".json,.changefield.json,.casework.json,application/json"
           onChange={(event) => {
             void selectFile(event.target.files?.[0]);
             event.target.value = "";

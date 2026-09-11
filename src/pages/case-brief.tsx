@@ -137,7 +137,7 @@ export function CaseBriefPage() {
         ))}
 
         <footer className="context-brief__footer">
-          <span>Casework</span>
+          <span>Changefield</span>
           <span>Generated from the recorded case · no inferred content</span>
         </footer>
       </article>

@@ -1,8 +1,10 @@
-# Casework
+# Changefield
 
-Casework is a local-first working environment for people moving complex change.
-It holds direction, pressure, influence, narrative, experiments, and differences
-inside one durable case record.
+Changefield is a local-first working environment for people moving complex
+organizational change. It holds direction, pressure, influence, narrative,
+experiments, and differences inside one durable case record.
+
+> Change becomes legible when the relations do.
 
 This repository is being rebuilt from an earlier static prototype. The new
 application is independent in identity, language, information architecture, and
@@ -20,7 +22,7 @@ The repository uses pnpm exclusively. The package manager version is declared in
 - Workspaces are available non-linearly.
 - Local work is immediate and durable.
 - Remote infrastructure remains replaceable.
-- AI support produces inspectable context briefs; it does not pretend to decide.
+- Brief generation is inspectable and deterministic; it does not pretend to decide.
 - Quiet ground occupies most of every view.
 - Colour appears in relationships, never as decoration.
 - Every unusual visual technique must explain something.
@@ -115,6 +117,11 @@ Next:
 
 The rebuild is local-first. Without environment configuration, cases remain in the
 browser's IndexedDB and are never sent to a remote service.
+
+New exports use the `.changefield.json` filename. The payload retains the
+`casework.case` format identifier, and the browser database retains its original
+name, so records made before the identity change continue to open without
+migration. Old `.casework.json` exports remain supported indefinitely.
 
 Authenticated synchronization is optional. To enable it:
 

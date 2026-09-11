@@ -8,8 +8,12 @@ import {
   type Force,
 } from "../domain/case";
 
+// The serialized identifier is deliberately independent from the product name.
+// Existing Casework exports remain valid Changefield records.
+export const CASE_FILE_FORMAT = "casework.case" as const;
+
 export interface CaseFile {
-  format: "casework.case";
+  format: typeof CASE_FILE_FORMAT;
   formatVersion: 1;
   exportedAt: string;
   case: ChangeCase;
@@ -105,7 +109,7 @@ function migrateDifferences(value: UnknownRecord): Difference[] {
 
 export function createCaseFile(value: ChangeCase): CaseFile {
   return {
-    format: "casework.case",
+    format: CASE_FILE_FORMAT,
     formatVersion: 1,
     exportedAt: new Date().toISOString(),
     case: changeCaseSchema.parse(value),
@@ -118,7 +122,7 @@ export function parseCaseFile(input: unknown): {
 } {
   const outer = record(input);
 
-  if (outer.format === "casework.case" && outer.formatVersion === 1) {
+  if (outer.format === CASE_FILE_FORMAT && outer.formatVersion === 1) {
     return {
       value: changeCaseSchema.parse(outer.case),
       migratedFromLegacy: false,
@@ -133,7 +137,7 @@ export function parseCaseFile(input: unknown): {
   const project = record(outer.project);
   const modules = record(outer.modules);
   if (!Object.keys(project).length && !Object.keys(modules).length) {
-    throw new Error("This file is not a Casework record or a recognized legacy export.");
+    throw new Error("This file is not a Changefield record or a recognized legacy export.");
   }
 
   const vision = record(modules.vision);
@@ -203,19 +207,23 @@ export function parseCaseFile(input: unknown): {
   };
 }
 
+export function caseDownloadFilename(value: Pick<ChangeCase, "title">) {
+  const slug =
+    value.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "") || "case";
+  return `${slug}.changefield.json`;
+}
+
 export function downloadCase(value: ChangeCase) {
   const contents = JSON.stringify(createCaseFile(value), null, 2);
   const blobUrl = URL.createObjectURL(
     new Blob([contents], { type: "application/json" }),
   );
   const link = document.createElement("a");
-  const slug =
-    value.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "") || "case";
   link.href = blobUrl;
-  link.download = `${slug}.casework.json`;
+  link.download = caseDownloadFilename(value);
   link.click();
   window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
 }

@@ -2,6 +2,8 @@ import { changeCaseSchema, type ChangeCase } from "../domain/case";
 import { caseRepository } from "./case-repository";
 import { supabase } from "./supabase";
 
+// Remote identifiers predate the Changefield name and remain stable so an
+// existing replica can continue synchronizing without a data migration.
 interface SyncResult {
   pushed: number;
   pulled: number;

@@ -37,12 +37,14 @@ export interface CaseRepository {
   acceptConflictRemote(caseId: string): Promise<ChangeCase>;
 }
 
-class CaseworkDatabase extends Dexie {
+class ChangefieldDatabase extends Dexie {
   cases!: EntityTable<ChangeCase, "id">;
   syncQueue!: EntityTable<SyncQueueItem, "id">;
   syncConflicts!: EntityTable<CaseSyncConflict, "caseId">;
 
   constructor() {
+    // Compatibility boundary: changing this name would strand existing cases
+    // in a different browser database.
     super("casework");
     this.version(1).stores({
       cases: "id, status, updatedAt, organization",
@@ -74,7 +76,7 @@ class CaseworkDatabase extends Dexie {
   }
 }
 
-const database = new CaseworkDatabase();
+const database = new ChangefieldDatabase();
 
 async function queueChange(caseId: string, operation: SyncQueueItem["operation"]) {
   const existing = await database.syncQueue.get(caseId);

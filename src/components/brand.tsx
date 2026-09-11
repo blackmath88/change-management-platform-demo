@@ -4,14 +4,14 @@ export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       to="/"
-      aria-label={compact ? "Casework home" : undefined}
+      aria-label={compact ? "Changefield home" : undefined}
       className={`brand${compact ? " brand--compact" : ""}`}
     >
       <span className="brand__mark" aria-hidden="true">
         <i />
         <i />
       </span>
-      <span className="brand__name">Casework</span>
+      <span className="brand__name">Changefield</span>
       {!compact && <span className="brand__descriptor">change in practice</span>}
     </Link>
   );

@@ -1,14 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { createExampleCase } from "../domain/case";
-import { createCaseFile, parseCaseFile } from "./case-file";
+import {
+  caseDownloadFilename,
+  createCaseFile,
+  parseCaseFile,
+} from "./case-file";
 
 describe("case files", () => {
-  it("round-trips a native Casework record", () => {
+  it("round-trips a native Changefield record", () => {
     const original = createExampleCase();
+    const file = createCaseFile(original);
     const parsed = parseCaseFile(
-      JSON.parse(JSON.stringify(createCaseFile(original))),
+      JSON.parse(JSON.stringify(file)),
     );
 
+    expect(file.format).toBe("casework.case");
+    expect(caseDownloadFilename(original)).toMatch(/\.changefield\.json$/);
     expect(parsed.migratedFromLegacy).toBe(false);
     expect(parsed.value).toEqual(original);
   });
@@ -81,7 +88,7 @@ describe("case files", () => {
 
   it("rejects unrelated JSON", () => {
     expect(() => parseCaseFile({ hello: "world" })).toThrow(
-      "not a Casework record",
+      "not a Changefield record",
     );
   });
 });

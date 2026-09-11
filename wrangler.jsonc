@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "casework",
+  "name": "changefield",
   "compatibility_date": "2026-05-04",
   "observability": {
     "enabled": true
