@@ -1,4 +1,15 @@
+<!-- BEGIN public-repo-header -->
+<div align="center">
+
 # Changefield
+
+<a href="https://github.com/blackmath88/change-management-platform-demo/actions/workflows/quality.yml"><img alt="Quality" src="https://github.com/blackmath88/change-management-platform-demo/actions/workflows/quality.yml/badge.svg?branch=main"></a>
+<a href="https://github.com/blackmath88/change-management-platform-demo"><img alt="Primary language: HTML" src="https://img.shields.io/badge/language-HTML-526078?style=flat"></a>
+<a href="https://github.com/blackmath88/change-management-platform-demo#readme"><img alt="README" src="https://img.shields.io/badge/docs-readme-16796f?style=flat"></a>
+<a href="https://github.com/blackmath88/change-management-platform-demo/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/blackmath88/change-management-platform-demo?style=flat&amp;color=737373"></a>
+
+</div>
+<!-- END public-repo-header -->
 
 Changefield is a local-first working environment for people moving complex
 organizational change. It holds direction, pressure, influence, narrative,
