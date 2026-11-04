@@ -23,7 +23,9 @@ if PUBLIC:
 app = FastMCP("Changefield", instructions=(
     "Build one complete IMD change case from the user's brief. Get the example, keep its native "
     "field types and stable IDs, and draft all six units. Label assumptions and open questions in "
-    "the appropriate notes. Cite user-supplied PDF page numbers only when known. Ask only for "
+    "the appropriate notes. If asked to facilitate, use the six questions from get_capabilities "
+    "one at a time and carry each answer into the downstream units. If asked for the whole process, "
+    "draft all six in one pass. Cite user-supplied PDF page numbers only when known. Ask only for "
     "missing details that change the work. Validate, render, retrieve the workbook and native JSON. "
     "For revisions start from the user's latest exported JSON. Never silently import into the IMD demo service."
 ), host="127.0.0.1", port=int(os.getenv("PORT","8789")), stateless_http=True, json_response=True,
@@ -42,6 +44,14 @@ def expire():
 def get_capabilities() -> dict:
     """Describe the six-unit IMD authoring profile, workflow and outputs."""
     return {"version":"imd/v1","units":UNITS,"outputs":["workbook.html","project.json"],
+            "facilitation":[
+                {"unit":"vision","ask":"What should someone be able to do differently?","produce":"Current situation, desired outcome and an observable signal"},
+                {"unit":"forces","ask":"What makes that change easier or harder?","produce":"Driving and resisting forces with a provisional strength"},
+                {"unit":"stakeholders","ask":"Who experiences the change and who can decide?","produce":"Actor IDs, roles, influence and questions to verify"},
+                {"unit":"communication","ask":"What should each audience know, feel or do?","produce":"One message, audience-specific invitations and communication risks"},
+                {"unit":"nudges","ask":"What small action will we test, with whom and when?","produce":"Adoption map tied to actor IDs, barriers, actions and timing"},
+                {"unit":"coordinate","ask":"Which disagreement can remain while work proceeds?","produce":"Both positions, holders and a practice linked to the difference ID"}
+            ],
             "workflow":["get_example","validate_case","render_case","retrieve_artifact"],
             "authoring":"Use the example as the minimum supported shape. Keep the same case and actor IDs across edits. An unknown is an explicit question, not evidence.",
             "maxCaseKB":160,"retention":"30 minutes or the most recent 24 renders"}

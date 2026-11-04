@@ -1,17 +1,22 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Changefield · IMD workbook</title><style>*{box-sizing:border-box}body{margin:0;font:15px system-ui;color:#172033}header{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;background:#111827;color:white}strong{margin-right:auto}button{font:inherit;padding:.45rem .65rem;border:1px solid #a1aab6;border-radius:5px;background:white;cursor:pointer}iframe{border:0;width:100%;height:calc(100dvh - 54px)}aside{max-width:50rem;margin:3rem auto;padding:1rem}aside button{margin:.3rem}@media(max-width:560px){header{flex-wrap:wrap}strong{width:100%}iframe{height:calc(100dvh - 95px)}}</style>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Changefield · IMD workbook</title><style id="imd-style"></style><style>*{box-sizing:border-box}body{margin:0;font:15px system-ui;color:#172033}header{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;background:#111827;color:white}strong{margin-right:auto}button{font:inherit;padding:.45rem .65rem;border:1px solid #a1aab6;border-radius:5px;background:white;cursor:pointer}iframe{border:0;width:100%;height:calc(100dvh - 54px)}aside{max-width:64rem;margin:clamp(1.2rem,4vw,4rem) auto;padding:0 clamp(1rem,3vw,2rem)}aside .module-link{width:100%;text-align:left;border-radius:0;background:var(--surface,#fff)}aside .lobby-head{margin-bottom:1.5rem}.module-link-sub{display:block}.module-map .module-link{grid-template-columns:2.8rem 1fr auto}@media(max-width:560px){header{flex-wrap:wrap}strong{width:100%}iframe{height:calc(100dvh - 95px)}}</style>
 <header><strong id="name"></strong><button id="home">Overview</button><button id="json">Export JSON</button><button id="html">Save workbook</button></header><aside></aside><iframe hidden sandbox="allow-scripts" title="IMD workspace"></iframe>
 <!--BUNDLE--><!--CASE-->
 <script>
 const $=s=>document.querySelector(s),book=JSON.parse($('#record').textContent),bundle=JSON.parse($('#bundle').textContent);
+$('#imd-style').textContent=bundle.css;
 const files=Object.keys(bundle.pages),keys=['vision','forces','stakeholders','communication','nudges','coordinate'];
 const titles=['Vision','Forces','Stakeholders','Messaging','Nudges','Coordinate'];
 let current=-1, afterSnapshot=null;
 function safe(obj){return JSON.stringify(obj).replace(/</g,'\\u003c')}
 function overview(){
  current=-1;$('iframe').hidden=true;$('iframe').removeAttribute('srcdoc');$('aside').hidden=false;$('aside').replaceChildren();
- const h=document.createElement('h1');h.textContent=book.project.title;$('aside').append(h);
- const p=document.createElement('p');p.textContent=book.project.summary;$('aside').append(p);
- titles.forEach((t,i)=>{const b=document.createElement('button');b.textContent='0'+(i+1)+' · '+t;b.onclick=()=>openUnit(i);$('aside').append(b)});
+ const add=(parent,tag,cl,txt)=>{const n=document.createElement(tag);n.className=cl;n.textContent=txt||'';parent.append(n);return n};
+ const hero=add($('aside'),'section','lobby-head');const intro=add(hero,'div','');
+ add(intro,'p','lobby-eyebrow','Changefield / Command Center');add(intro,'h1','lobby-title',book.project.title);add(intro,'p','lobby-subtitle',book.project.summary);
+ const module=add($('aside'),'section','module');const top=add(module,'div','module-header');const head=add(top,'div','');add(head,'div','eyebrow','Your change process');add(head,'h2','module-title','Six connected workspaces');
+ const map=add(module,'div','module-map'),m=book.modules;
+ const summaries=[m.vision.vision_statement,m.forces.summary,m.stakeholders.stakeholders.map(s=>s.name).join(' · '),m.communication.core_solution,m.nudges.momentum_tipping,m.coordinate.summary];
+ titles.forEach((t,i)=>{const b=add(map,'button','module-link');add(b,'span','module-index','0'+(i+1));const body=add(b,'span','');add(body,'strong','module-link-title',t);add(body,'span','module-link-sub',summaries[i]);add(b,'span','unit-output','Open →');b.onclick=()=>openUnit(i)});
 }
 function openUnit(i,query=''){
  if(i<0){overview();return}current=i;$('aside').hidden=true;const old=$('iframe'),f=old.cloneNode(false);f.removeAttribute('srcdoc');old.replaceWith(f);f.hidden=false;document.querySelectorAll('header button').forEach(b=>b.disabled=true);
