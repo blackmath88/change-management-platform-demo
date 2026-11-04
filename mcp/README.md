@@ -13,6 +13,19 @@ From the repository root with Python 3.11+:
 
 The server binds to 127.0.0.1:8789. For a local MCP client use the same interpreter and server path without --http.
 
+## Use from a tool-enabled chat right now
+
+When the chat has GitHub read access and a Python execution workspace, it can fetch this repository, author a case privately, and run the actual MCP server locally through the included client. This route works without a registered Changefield app. Use the checkout from one revision, including `mcp/` and `public/imd/`. Install the requirements into a virtualenv as above.
+
+    .venv/bin/python mcp/chat_case.py --example --out first-example
+    .venv/bin/python mcp/chat_case.py --case private-draft.json --out first-case
+
+Return `workbook.html` and `project.json` to the user. For an update, start from their most recent JSON or saved workbook; preserve the project ID, actor IDs, and unrelated fields. The following command extracts the data without running the workbook:
+
+    .venv/bin/python mcp/chat_case.py --extract saved-workbook.html > revision.json
+
+Apply the requested change to revision.json, update any affected downstream units, and render with `--case revision.json --out revised-case`. Every render verifies the retrieved HTML and JSON contain the submitted case. Keep real case inputs and results outside Git and public Pages. A fresh output directory keeps the previous revision available.
+
 ## Connect ChatGPT
 
 For the same private setup as MS Teams Personas, configure a **separate Changefield profile** on the always-on tunnel host. Its stdio command is the absolute path to the project virtualenv's Python followed by the absolute path to mcp/server.py. Register the Changefield tunnel as its own ChatGPT app. Run the five tools through ChatGPT to verify the connection. In this mode retrieve_artifact returns file content as an embedded MCP resource; how the chat presents a download depends on the client. See the [Personas private tunnel handoff](https://github.com/blackmath88/msteams-personas/blob/main/docs/CHATGPT-CUSTOM-MCP-SETUP.md) for the established host workflow.
