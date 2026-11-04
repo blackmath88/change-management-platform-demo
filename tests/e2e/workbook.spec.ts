@@ -24,10 +24,7 @@ test("six IMD units, offline edit, exported JSON and reopened workbook", async (
       if (i === 0) {
         const input = frame.locator("#ctx-title");
         await expect(input).toHaveValue("Beschlüsse im Campusservice");
-        await input.evaluate((node: HTMLInputElement) => {
-          node.value = "Workshop update";
-          node.dispatchEvent(new Event("input", { bubbles: true }));
-        });
+        await input.fill("Workshop update");
       }
       await page.locator("#home").click();
     }
