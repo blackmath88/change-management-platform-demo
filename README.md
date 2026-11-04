@@ -18,6 +18,10 @@ The [local case workspace](https://blackmath88.github.io/change-management-platf
 The repository uses pnpm exclusively. The package manager version is declared in
 `package.json`; pnpm enforces that declaration through `.npmrc`.
 
+## Chat-authored IMD workbooks
+
+The [fictional six-unit workbook](https://blackmath88.github.io/change-management-platform-demo/workbook/) uses the original IMD screens offline. ChatGPT can draft all six native modules through the [Changefield MCP server](mcp/README.md). The Pages build renders the fictional example with Python 3.11+; private cases remain on the MCP host and in the returned files.
+
 ## Product principles
 
 - The case is a composition, not a dashboard.

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Changefield · IMD workbook</title><style>*{box-sizing:border-box}body{margin:0;font:15px system-ui;color:#172033}header{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;background:#111827;color:white}strong{margin-right:auto}button{font:inherit;padding:.45rem .65rem;border:1px solid #a1aab6;border-radius:5px;background:white;cursor:pointer}iframe{border:0;width:100%;height:calc(100dvh - 54px)}aside{max-width:50rem;margin:3rem auto;padding:1rem}aside button{margin:.3rem}@media(max-width:560px){header{flex-wrap:wrap}strong{width:100%}iframe{height:calc(100dvh - 95px)}}</style>
+<header><strong id="name"></strong><button id="home">Overview</button><button id="json">Export JSON</button><button id="html">Save workbook</button></header><aside></aside><iframe hidden sandbox="allow-scripts" title="IMD workspace"></iframe>
+<!--BUNDLE--><!--CASE-->
+<script>
+const $=s=>document.querySelector(s),book=JSON.parse($('#record').textContent),bundle=JSON.parse($('#bundle').textContent);
+const files=Object.keys(bundle.pages),keys=['vision','forces','stakeholders','communication','nudges','coordinate'];
+const titles=['Vision','Forces','Stakeholders','Messaging','Nudges','Coordinate'];
+let current=-1, afterSnapshot=null;
+function safe(obj){return JSON.stringify(obj).replace(/</g,'\\u003c')}
+function overview(){
+ current=-1;$('iframe').hidden=true;$('iframe').removeAttribute('srcdoc');$('aside').hidden=false;$('aside').replaceChildren();
+ const h=document.createElement('h1');h.textContent=book.project.title;$('aside').append(h);
+ const p=document.createElement('p');p.textContent=book.project.summary;$('aside').append(p);
+ titles.forEach((t,i)=>{const b=document.createElement('button');b.textContent='0'+(i+1)+' · '+t;b.onclick=()=>openUnit(i);$('aside').append(b)});
+}
+function openUnit(i,query=''){
+ if(i<0){overview();return}current=i;$('aside').hidden=true;const old=$('iframe'),f=old.cloneNode(false);f.removeAttribute('srcdoc');old.replaceWith(f);f.hidden=false;document.querySelectorAll('header button').forEach(b=>b.disabled=true);
+ const policy='<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'unsafe-inline\'; style-src \'unsafe-inline\'; img-src data:; form-action \'none\'; base-uri \'none\'">';
+ const boot=policy+'<script id="seed" type="application/json">'+safe(book)+'<\/script><script>'+bundle.bridge+'<\/script>';
+ f.srcdoc=bundle.pages[files[i]].replace('<!--BOOT-->',()=>boot).replace('<!--STYLE-->',()=>'<style>'+bundle.css+'</style>').replaceAll('window.location.search',()=>JSON.stringify(query));
+}
+function flushed(fn){if(current<0){fn();return}if(afterSnapshot)return;afterSnapshot=fn;$('iframe').contentWindow.postMessage('snapshot','*')}
+function output(html){$('#record').textContent=safe(book);const copy=document.documentElement.cloneNode(true);copy.querySelector('iframe').removeAttribute('srcdoc');copy.querySelector('aside').replaceChildren();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html?'<!doctype html>'+copy.outerHTML:JSON.stringify(book,null,2)],{type:html?'text/html':'application/json'}));a.download='Changefield-'+book.project.id+(html?'.html':'.json');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+addEventListener('message',e=>{
+ if(e.source!==$('iframe').contentWindow||current<0||!e.data)return;
+ const m=e.data;
+ if(m.type==='ready'){document.querySelectorAll('header button').forEach(b=>b.disabled=false);return}
+ if(m.type==='snapshot'||m.type==='saved'){book.modules[keys[current]]=m.value;if(m.type==='snapshot'&&afterSnapshot){const fn=afterSnapshot;afterSnapshot=null;fn()}}
+ else if(m.type==='open'){const [file,query]=m.target.split('?');flushed(()=>openUnit(files.indexOf(file),query?'?'+query:''))}
+ else if(m.type==='export')flushed(()=>output(false));
+});
+$('#name').textContent='Changefield · '+book.project.title;$('#home').onclick=()=>flushed(overview);$('#html').onclick=()=>flushed(()=>output(true));$('#json').onclick=()=>flushed(()=>output(false));overview();
+</script></html>

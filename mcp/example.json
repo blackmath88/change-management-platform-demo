@@ -1,0 +1,153 @@
+{
+  "project": {
+    "id": "campus-pilot",
+    "title": "Beschlüsse im Campusservice",
+    "organization": "Fiktive Hochschule",
+    "your_role": "Change-Begleitung",
+    "summary": "Fiktiver Pilot. Zwei Teams prüfen, ob Stellvertretungen Beschlüsse ohne Rückfragen finden."
+  },
+  "modules": {
+    "vision": {
+      "ctx_title": "Beschlüsse im Campusservice",
+      "ctx_org": "Fiktive Hochschule",
+      "ctx_current": "Entscheide stehen im privaten Chat.",
+      "ctx_desired": "Die Stellvertretung findet den letzten Entscheid innert zwei Minuten.",
+      "ctx_why": "In zwei Wochen wechselt die Vertretung.",
+      "vision_statement": "Jeder operative Beschluss hat einen auffindbaren Ort.",
+      "north_star": "Suchzeit der Stellvertretung",
+      "signals": [
+        "Suchzeit nach der zweiten Sitzung"
+      ]
+    },
+    "forces": {
+      "driving": [
+        {
+          "id": "f1",
+          "label": "Vertretung braucht Zugang",
+          "strength": 4,
+          "type": "rational"
+        }
+      ],
+      "resisting": [
+        {
+          "id": "f2",
+          "label": "Zusätzlicher Schreibaufwand",
+          "strength": 3,
+          "type": "rational"
+        }
+      ],
+      "summary": "Annahme: Ein kurzer Beitrag ersetzt spätere Rückfragen. Im Pilot beobachten."
+    },
+    "stakeholders": {
+      "stakeholders": [
+        {
+          "id": "s1",
+          "name": "Sitzungsleitung",
+          "role": "Hält den Beschluss fest",
+          "power": 4,
+          "interest": 3,
+          "stance": "",
+          "readiness": 0,
+          "influence": "medium",
+          "needs": "Zeit am Sitzungsende",
+          "concerns": "Doppelte Dokumentation",
+          "notes": "Haltung offen. Einschätzungen im Gespräch prüfen."
+        },
+        {
+          "id": "s2",
+          "name": "Stellvertretung",
+          "role": "Übernimmt Aufgaben",
+          "power": 3,
+          "interest": 5,
+          "stance": "",
+          "readiness": 0,
+          "influence": "medium",
+          "needs": "Zugriff auf den Entscheid",
+          "concerns": "Unvollständige Übergabe",
+          "notes": "Welche Information fehlt bei der Übergabe?"
+        }
+      ]
+    },
+    "communication": {
+      "core_problem": "Abwesende müssen nachfragen.",
+      "core_solution": "Ein Beitrag nennt Beschluss, Person und Termin.",
+      "core_impact": "Die nächste Schicht kann übernehmen.",
+      "obj_do": "Beim nächsten Treffen einen Suchfall zeigen.",
+      "audiences": [
+        {
+          "id": "s2",
+          "name": "Stellvertretung",
+          "color": "#586c82",
+          "know": "Wo der Beitrag steht",
+          "feel": "Eine Rückfrage ist willkommen",
+          "do": "Suche ohne privaten Chat ausprobieren",
+          "tone": "Einladend",
+          "notes": "Im Pilot nachfragen"
+        }
+      ]
+    },
+    "nudges": {
+      "nudges": [
+        {
+          "id": "n1",
+          "title": "Letzte Minute für den Beschluss",
+          "east": "easy",
+          "target": "Sitzungsleitung",
+          "barrier": "Sitzung überzieht",
+          "action": "Vor dem Abschluss den Kanalbeitrag anlegen.",
+          "timing": "In den nächsten zwei Sitzungen"
+        }
+      ],
+      "momentum_tipping": "Nach zwei Sitzungen Suchzeit und Schreibaufwand vergleichen.",
+      "adoption_map": [
+        {
+          "id": "s1",
+          "name": "Sitzungsleitung",
+          "role": "Hält den Beschluss fest",
+          "current_stage": 0,
+          "target_stage": 2,
+          "desired_behaviour": "Beschluss im Kanal festhalten",
+          "barrier": "Im Pilotgespräch überprüfen"
+        },
+        {
+          "id": "s2",
+          "name": "Stellvertretung",
+          "role": "Übernimmt Aufgaben",
+          "current_stage": 0,
+          "target_stage": 2,
+          "desired_behaviour": "Beschluss ohne privaten Chat finden",
+          "barrier": "Im Pilotgespräch überprüfen"
+        }
+      ]
+    },
+    "coordinate": {
+      "differences": [
+        {
+          "id": "d1",
+          "positionA_label": "Gesprächsfluss schützen",
+          "positionA_holders": "Sitzungsleitung",
+          "positionB_label": "Übergabe absichern",
+          "positionB_holders": "Stellvertretung",
+          "values_at_stake": "Zeit und Nachvollziehbarkeit",
+          "unresolvable_confidence": 3
+        }
+      ],
+      "summary": "Nur finale Entscheide dokumentieren. Die zwei Teams überprüfen die Regel nach dem Pilot.",
+      "practices": [
+        {
+          "id": "p1",
+          "label": "Am Sitzungsende nur den finalen Beschluss festhalten",
+          "confidence": 3,
+          "bridges": {
+            "d1": {
+              "sideA": true,
+              "reasonA": "Eine Minute statt zusätzlichem Protokoll.",
+              "sideB": true,
+              "reasonB": "Eine klare Übergabe."
+            }
+          }
+        }
+      ]
+    }
+  }
+}
