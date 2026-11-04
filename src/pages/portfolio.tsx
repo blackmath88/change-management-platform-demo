@@ -231,6 +231,8 @@ export function Portfolio() {
             <div className="case-index__actions">
               <NewCaseDialog />
               <ImportCaseButton />
+              <a className="text-link" href={`${import.meta.env.BASE_URL}pilot/`}>M365 pilot case ↗</a>
+              <a className="text-link" href={`${import.meta.env.BASE_URL}imd/`}>IMD demo archive ↗</a>
             </div>
             <p>
               Records remain in this browser.<br />

@@ -1,4 +1,5 @@
 import {
+  createHashHistory,
   createRootRoute,
   createRoute,
   createRouter,
@@ -73,6 +74,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
+  history: import.meta.env.VITE_PAGES === "true" ? createHashHistory() : undefined,
   defaultPreload: "intent",
 });
 

@@ -19,9 +19,7 @@ experiments, and differences inside one durable case record.
 
 This repository is being rebuilt from an earlier static prototype. The new
 application is independent in identity, language, information architecture, and
-visual system. The previous standalone HTML workspaces remain temporarily in the
-repository as migration references; they are not included in the production
-bundle.
+visual system. GitHub Actions publishes Changefield at the project root. The [M365 pilot](https://blackmath88.github.io/change-management-platform-demo/pilot/) and the [six-unit IMD demo](https://blackmath88.github.io/change-management-platform-demo/imd/) are available alongside the [Changefield app](https://blackmath88.github.io/change-management-platform-demo/). The standalone files live under public/pilot and public/imd. Pages uses hash routing so case links survive a reload.
 
 The repository uses pnpm exclusively. The package manager version is declared in
 `package.json`; pnpm enforces that declaration through `.npmrc`.
