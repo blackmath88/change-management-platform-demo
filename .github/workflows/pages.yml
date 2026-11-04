@@ -35,10 +35,14 @@ jobs:
         env:
           VITE_PAGES: 'true'
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
-        run: pnpm exec vite build --base "${PAGES_BASE%/}/"
+        run: |
+          pnpm exec vite build --base "${PAGES_BASE%/}/"
+          node scripts/publish-command-center.mjs
       - name: Check published entry points
         run: |
-          test -s dist/index.html
+          grep -q "Start a connected change case" dist/index.html
+          test -s dist/workspace/index.html
+          for unit in dist/imd/unit*.html; do cmp "$unit" "dist/$(basename "$unit")"; done
           test -s dist/imd/index.html
           test -s dist/imd/unit6-coordinate.html
           test -s dist/pilot/index.html

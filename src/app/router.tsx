@@ -74,7 +74,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
-  history: import.meta.env.VITE_PAGES === "true" ? createHashHistory() : undefined,
+  history: (import.meta.env.VITE_PAGES === "true" || window.location.pathname.endsWith("/workspace/") || window.location.pathname.endsWith("/workspace/index.html")) ? createHashHistory() : undefined,
   defaultPreload: "intent",
 });
 

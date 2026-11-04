@@ -11,15 +11,9 @@
 </div>
 <!-- END public-repo-header -->
 
-Changefield is a local-first working environment for people moving complex
-organizational change. It holds direction, pressure, influence, narrative,
-experiments, and differences inside one durable case record.
+[Changefield](https://blackmath88.github.io/change-management-platform-demo/) opens on the Command Center. Its six workspaces retain the IMD interaction design: Vision, Forces, Stakeholders, Messaging, Nudges and Coordinate. The main experience and the preserved [IMD release](https://blackmath88.github.io/change-management-platform-demo/imd/) use the same IMD demo service for project data.
 
-> Change becomes legible when the relations do.
-
-This repository is being rebuilt from an earlier static prototype. The new
-application is independent in identity, language, information architecture, and
-visual system. GitHub Actions publishes Changefield at the project root. The [M365 pilot](https://blackmath88.github.io/change-management-platform-demo/pilot/) and the [six-unit IMD demo](https://blackmath88.github.io/change-management-platform-demo/imd/) are available alongside the [Changefield app](https://blackmath88.github.io/change-management-platform-demo/). The standalone files live under public/pilot and public/imd. Pages uses hash routing so case links survive a reload.
+The [local case workspace](https://blackmath88.github.io/change-management-platform-demo/workspace/) keeps the React app, IndexedDB records and native case imports available. The [M365 pilot](https://blackmath88.github.io/change-management-platform-demo/pilot/) is a separate editable case. The publishing step derives the main Command Center from the preserved IMD files on every production build.
 
 The repository uses pnpm exclusively. The package manager version is declared in
 `package.json`; pnpm enforces that declaration through `.npmrc`.
